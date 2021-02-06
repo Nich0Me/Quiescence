@@ -16,5 +16,9 @@ for r = 1:length(dec_array)
         error('No Time Condition')
     end
 end
+idxAge = find(strcmpi(tabletemp.Properties.VariableNames, 'Age'));
+dec_array(:,3) = table2array(tabletemp(1:100,idxAge));
 
+idxSex = find(strcmpi(tabletemp.Properties.VariableNames, 'Sex'));
+dec_array(:,4) = strcmp(table2array(tabletemp(1:100,idxSex)),'Male');
 end

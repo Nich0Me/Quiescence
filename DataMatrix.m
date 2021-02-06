@@ -202,7 +202,7 @@ for sbj = 1:TotSub
 end
 
 dec_array = get_sbj_table();
-DataStructure(:,[37,38]) = dec_array;
+DataStructure(:,[37,38,39,40]) = dec_array;
 %% DATA STRUCTURE LEGEND
 % 1 Training accuracy
 % 2 Is it over threshold?
@@ -235,9 +235,25 @@ DataStructure(:,[37,38]) = dec_array;
 % 35-36 Mean accuracy new conf overtime POSTTEST
 % 37 1 if declared
 % 38 when they declared, 1 if training, 2 if pretest, 3 if distractor, 4 if posttest
+% 39 Age of Participants
+% 40 Sex, 1=Male
 %% Select subject
-sbjIdx = (sum(DataStructure(:,[2,4,6,7,10,11,14,15])') > 0  | (DataStructure(:,20) > 0.65)') & (DataStructure(:,37) == 0)';
+%sbjIdx = (sum(DataStructure(:,[6,14,15])') > 0  | (DataStructure(:,20) > 0.65)') & (DataStructure(:,37) == 0)';
+
+%sbjIdx = (sum(DataStructure(:,[2,4,6,10,11,14,15])') > 0  | (DataStructure(:,20) > 0.65)') & (DataStructure(:,37) == 0)';
+% 12 13 8 9
+sbjIdx = (sum(DataStructure(:,[4,6,10,11,14,15])') > 0 | (DataStructure(:,20) > 0.65)') & (DataStructure(:,37) == 0 | (DataStructure(:,37) == 1 & (DataStructure(:,13)-DataStructure(:,9)>0) & (DataStructure(:,12)-DataStructure(:,8)>0)))';
+
 sbjIdx([19,23, 40]) = 0;
+
+% SbjTable = DataStructure(sbjIdx, [2,4,6,10,11,14,15,20]);
+% 
+% [row, col] = find(isnan(SbjTable));
+% 
+% offtable = array2table(SbjTable(row,:), 'VariableNames', {'Training', 'Pretest', 'Posttest', 'OldPreTest', 'NewPreTest', 'OldPostTest', 'NewPostTest', '2-back'});
+% 
+% [row, col] = find(~isnan(SbjTable(:,8)));
+% NBtable = array2table(SbjTable(row,:), 'VariableNames', {'Training', 'Pretest', 'Posttest', 'OldPreTest', 'NewPreTest', 'OldPostTest', 'NewPostTest', '2-back'});
 
 %% GENERAL Plot accuracy training - pretest - posttest
 figure
@@ -443,7 +459,7 @@ subplot(1,2,1)
 bar([mean(imprNBM), mean(imprQM)])
 hold on
 errorbar([mean(imprNBM), mean(imprQM)], [std(imprNBM)./sqrt(length(imprNBM)), std(imprQM)./sqrt(length(imprQM))], 'k')
-ylim([-0.05, 0.05])
+ylim([-0.04, 0.065])
 set(gca,'xticklabel', {'NB', 'Quie'})
 title('Improvement in Memorization')
 
@@ -451,7 +467,7 @@ subplot(1,2,2)
 bar([mean(imprNBG), mean(imprQG)])
 hold on
 errorbar([mean(imprNBG), mean(imprQG)], [std(imprNBG)./sqrt(length(imprNBG)), std(imprQG)./sqrt(length(imprQG))], 'k')
-ylim([-0.05, 0.05])
+ylim([-0.04, 0.065])
 set(gca,'xticklabel', {'NB', 'Quie'})
 title('Improvement in Generalization')
 
@@ -562,3 +578,47 @@ ylabel('Improvement Generalization')
 xlabel('Training Accuracy')
 lsline
 sgtitle('NBACK: Training over Improvements')
+
+%% Subjects improvement Q/NB, Mem&Gen/Gen/Mem/None
+
+% Old conf impr only, NB
+NBMem = find((DataStructure(:,12)-DataStructure(:,8) > 0 & sbjIdx' & DataStructure(:,21)) & (DataStructure(:,13)-DataStructure(:,9) <= 0 & sbjIdx' & DataStructure(:,21)));
+% New conf impr only, NB
+NBGen = find((DataStructure(:,12)-DataStructure(:,8) <= 0 & sbjIdx' & DataStructure(:,21)) & (DataStructure(:,13)-DataStructure(:,9) > 0 & sbjIdx' & DataStructure(:,21)));
+% Old and New conf impr, NB
+NBMemGen = find((DataStructure(:,12)-DataStructure(:,8) > 0 & sbjIdx' & DataStructure(:,21)) & (DataStructure(:,13)-DataStructure(:,9) > 0 & sbjIdx' & DataStructure(:,21)));
+% No improvement, NB
+NBNone = find((DataStructure(:,12)-DataStructure(:,8) <= 0 & sbjIdx' & DataStructure(:,21)) & (DataStructure(:,13)-DataStructure(:,9) <= 0 & sbjIdx' & DataStructure(:,21)));
+
+% Old conf impr only, NB
+QMem = find((DataStructure(:,12)-DataStructure(:,8) > 0 & sbjIdx' & DataStructure(:,21) == 0) & (DataStructure(:,13)-DataStructure(:,9) <= 0 & sbjIdx' & DataStructure(:,21) == 0));
+% New conf impr only, NB
+QGen = find((DataStructure(:,12)-DataStructure(:,8) <= 0 & sbjIdx' & DataStructure(:,21) == 0) & (DataStructure(:,13)-DataStructure(:,9) > 0 & sbjIdx' & DataStructure(:,21) == 0));
+% Old and New conf impr, NB
+QMemGen = find((DataStructure(:,12)-DataStructure(:,8) > 0 & sbjIdx' & DataStructure(:,21) == 0) & (DataStructure(:,13)-DataStructure(:,9) > 0 & sbjIdx' & DataStructure(:,21) == 0));
+% No improvement, NB
+QNone = find((DataStructure(:,12)-DataStructure(:,8) <= 0 & sbjIdx' & DataStructure(:,21) == 0) & (DataStructure(:,13)-DataStructure(:,9) <= 0 & sbjIdx' & DataStructure(:,21) == 0));
+
+
+%DataStructure(NBMemGen,13)-DataStructure(NBMemGen,9)
+%DataStructure(QMemGen,13)-DataStructure(QMemGen,9)
+
+%% New-Old QUIESCENCE
+figure
+subplot(1,2,1)
+bar([mean(DataStructure(Qsbj,9)-DataStructure(Qsbj,8)), mean(DataStructure(Qsbj,13)-DataStructure(Qsbj,12))])
+hold on
+errorbar([mean(DataStructure(Qsbj,9)-DataStructure(Qsbj,8)), mean(DataStructure(Qsbj,13)-DataStructure(Qsbj,12))], [std(DataStructure(Qsbj,9)-DataStructure(Qsbj,8)),std(DataStructure(Qsbj,13)-DataStructure(Qsbj,12))]./sqrt(sum(Qsbj)), 'k')
+ylim([-0.2, 0])
+grid on
+title('QUIESCENCE')
+set(gca,'xticklabel', {'PreTest', 'PostTest'})
+
+subplot(1,2,2)
+bar([mean(DataStructure(NBsbj,9)-DataStructure(NBsbj,8)), mean(DataStructure(NBsbj,13)-DataStructure(NBsbj,12))])
+hold on
+errorbar([mean(DataStructure(NBsbj,9)-DataStructure(NBsbj,8)), mean(DataStructure(NBsbj,13)-DataStructure(NBsbj,12))], [std(DataStructure(NBsbj,9)-DataStructure(NBsbj,8)),std(DataStructure(NBsbj,13)-DataStructure(NBsbj,12))]./sqrt(sum(NBsbj)), 'k')
+ylim([-0.2, 0])
+grid on
+title('MEMORIZATION')
+set(gca,'xticklabel', {'PreTest', 'PostTest'})
