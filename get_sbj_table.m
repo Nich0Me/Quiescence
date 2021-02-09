@@ -2,6 +2,7 @@ function dec_array = get_sbj_table()
 tabletemp = readtable('QuiescencePavloviaParticipants.xlsx');
 
 dec_array = table2array(tabletemp(1:100, 7));
+Break_Length = table2array(tabletemp(1:100, 10));
 
 for r = 1:length(dec_array)
     if strcmp(table2array(tabletemp(r,8)), 'T1')
@@ -21,4 +22,5 @@ dec_array(:,3) = table2array(tabletemp(1:100,idxAge));
 
 idxSex = find(strcmpi(tabletemp.Properties.VariableNames, 'Sex'));
 dec_array(:,4) = strcmp(table2array(tabletemp(1:100,idxSex)),'Male');
+dec_array(:,5) = Break_Length;
 end

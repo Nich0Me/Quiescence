@@ -202,7 +202,7 @@ for sbj = 1:TotSub
 end
 
 dec_array = get_sbj_table();
-DataStructure(:,[37,38,39,40]) = dec_array;
+DataStructure(:,[37,38,39,40, 41]) = dec_array;
 %% DATA STRUCTURE LEGEND
 % 1 Training accuracy
 % 2 Is it over threshold?
@@ -237,6 +237,7 @@ DataStructure(:,[37,38,39,40]) = dec_array;
 % 38 when they declared, 1 if training, 2 if pretest, 3 if distractor, 4 if posttest
 % 39 Age of Participants
 % 40 Sex, 1=Male
+% 41 Break Length
 %% Select subject
 %sbjIdx = (sum(DataStructure(:,[6,14,15])') > 0  | (DataStructure(:,20) > 0.65)') & (DataStructure(:,37) == 0)';
 
