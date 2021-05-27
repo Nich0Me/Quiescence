@@ -42,6 +42,7 @@ for sbj = 1:TotSub
     
     OldAcc = mean(pretest.Correct(tempIdx1));
     DataStructure(sbj,8) = OldAcc;
+    DataStructure(sbj,45) = mean(pretest.RT(tempIdx1)); % RT pretest
     
     temp = unique(pretest.conf);
     NewConf = temp(~ismember(unique(temp),unique(training.conf)));
@@ -49,6 +50,7 @@ for sbj = 1:TotSub
     
     NewAcc = mean(pretest.Correct(tempIdx2));
     DataStructure(sbj,9) = NewAcc;
+    DataStructure(sbj,46) = mean(pretest.RT(tempIdx2)); % RT pretest
     
     %% 10 & 11 -> Threshold old and new conf
     threshold5 = binoinv(threshold,length(pretest.Correct(tempIdx1)),0.5)/length(pretest.Correct(tempIdx1));
@@ -63,6 +65,7 @@ for sbj = 1:TotSub
     
     OldAcc = mean(posttest.Correct(tempIdx1));
     DataStructure(sbj,12) = OldAcc;
+    DataStructure(sbj,47) = nanmean(pretest.RT(tempIdx1)); % RT postTest Old
     
     temp = unique(posttest.conf);
     NewConf = temp(~ismember(unique(temp),unique(training.conf)));
@@ -70,6 +73,7 @@ for sbj = 1:TotSub
     
     NewAcc = mean(posttest.Correct(tempIdx2));
     DataStructure(sbj,13) = NewAcc;
+    DataStructure(sbj,48) = nanmean(pretest.RT(tempIdx2)); % RT postTest new
     
     %% 14 & 15 -> Threshold old and new conf
     threshold5 = binoinv(threshold,length(posttest.Correct(tempIdx1)),0.5)/length(posttest.Correct(tempIdx1));
@@ -199,6 +203,12 @@ for sbj = 1:TotSub
     DataStructure(sbj,35) = mean(posttest.Correct(tempIdx1));
     DataStructure(sbj,36) = mean(posttest.Correct(tempIdx2));
     
+    
+    %% 42/43/44 REACTION TIME
+    DataStructure(sbj,42) = nanmean(training.RT);
+    DataStructure(sbj,43) = nanmean(pretest.RT);
+    DataStructure(sbj,44) = nanmean(posttest.RT);
+    
 end
 
 dec_array = get_sbj_table();
@@ -238,12 +248,15 @@ DataStructure(:,[37,38,39,40, 41]) = dec_array;
 % 39 Age of Participants
 % 40 Sex, 1=Male
 % 41 Break Length
+% 42-44 mean RT training, pretest, posttest
+% 45-46 mean RT for old and new stimuli pretest
+% 47-48 mean RT for old and new stimuli posttest
 %% Select subject
 %sbjIdx = (sum(DataStructure(:,[6,14,15])') > 0  | (DataStructure(:,20) > 0.65)') & (DataStructure(:,37) == 0)';
 
 %sbjIdx = (sum(DataStructure(:,[2,4,6,10,11,14,15])') > 0  | (DataStructure(:,20) > 0.65)') & (DataStructure(:,37) == 0)';
 % 12 13 8 9
-sbjIdx = (sum(DataStructure(:,[4,6,10,11,14,15])') > 0 | (DataStructure(:,20) > 0.65)') & (DataStructure(:,37) == 0 | (DataStructure(:,37) == 1 & (DataStructure(:,13)-DataStructure(:,9)>0) & (DataStructure(:,12)-DataStructure(:,8)>0)))';
+sbjIdx = (sum(DataStructure(:,[4,6,10,11,14,15])') > 0 | (DataStructure(:,20) > 0.5571)') & (DataStructure(:,37) == 0 | (DataStructure(:,37) == 1 & (DataStructure(:,13)-DataStructure(:,9)>0) & (DataStructure(:,12)-DataStructure(:,8)>0)))';
 
 sbjIdx([19,23, 40]) = 0;
 
