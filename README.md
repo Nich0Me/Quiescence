@@ -6,8 +6,8 @@ In the main folder you can find different files and subfolders:
 1. Results2B are the raw results for the active condition
 2. ResultsQ are the raw results for the offline condition
 
-- Subjects containts 100 subfolders, one per participant.
-1. Inside the mat file you'll find 4 structures with the data from the training, pretest, posttest and offline/nback condition.
+- Subjects contain 100 subfolders, one per participant.
+1. Inside the mat file, you'll find 4 structures with the data from the training, pretest, posttest and offline/nback condition.
 
 - ExcelToMatlabNBack and ExcelToMatlabQuiescence are scripts that transform the raw data into the subjects matrices.
 
@@ -15,7 +15,7 @@ In the main folder you can find different files and subfolders:
 
 - In the Analysis subfolder you can find:
 1. knn-smoothing folder with the scripts and function to run the analysis
-2. DataMarix creates a big matrix with the relevant data for all the participants (DataStructure). See line 225 for a legend of the matrix. It also generates plots.
+2. DataMatrix creates a big matrix with the relevant data for all the participants (DataStructure). See line 225 for a legend of the matrix. It also generates plots.
 3. PaperPlot generates the plots we used in the paper, it requires the superbar toolbox
 4. TwoWayQuieMem is the script of the ANOVA and the ttests.
 
