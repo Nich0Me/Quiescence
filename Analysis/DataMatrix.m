@@ -1,7 +1,7 @@
 clear all
 close all
 
-path = './../';
+path = './../Subjects/';
 TotSub = 100;
 threshold = 0.90;
 for sbj = 1:TotSub
