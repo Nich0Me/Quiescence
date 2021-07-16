@@ -1,7 +1,7 @@
 clear all
 close all
 
-path = './';
+path = './../';
 TotSub = 100;
 threshold = 0.90;
 for sbj = 1:TotSub
@@ -11,6 +11,7 @@ for sbj = 1:TotSub
     %% 1 & 2 -> Mean Training - Threshold Training
     TrAcc = training.Feedback(training.miss==0);
     threshold1 = binoinv(threshold,length(TrAcc),0.5)/length(TrAcc);
+    threshold1 = 0.50;
     
     DataStructure(sbj,1) = mean(TrAcc);
     DataStructure(sbj,2) = mean(TrAcc) > threshold1;
@@ -18,6 +19,7 @@ for sbj = 1:TotSub
     %% 3 & 4 -> Mean PreTest - Threshold PreTest
     T1Acc = pretest.Correct(pretest.miss==0);
     threshold2 = binoinv(threshold,length(T1Acc),0.5)/length(T1Acc);
+    threshold2 = 0.50;
     
     DataStructure(sbj,3) = mean(T1Acc);
     DataStructure(sbj,4) = mean(T1Acc) > threshold2;
@@ -25,12 +27,15 @@ for sbj = 1:TotSub
     %% 5 & 6 -> Mean PreTest - Threshold PreTest
     T2Acc = posttest.Correct(posttest.miss==0);
     threshold3 = binoinv(threshold,length(T2Acc),0.5)/length(T2Acc);
+    threshold3 = 0.50;
     
     DataStructure(sbj,5) = mean(T2Acc);
     DataStructure(sbj,6) = mean(T2Acc) > threshold3;
     
     %% 7 -> Threshold Last 50 Trials Training
     threshold4 = binoinv(threshold,60,0.5)/50;
+    threshold4 = 0.50;
+    
     if length(TrAcc)-59 <= 0
         DataStructure(sbj,7) = NaN;
     else
@@ -54,9 +59,13 @@ for sbj = 1:TotSub
     
     %% 10 & 11 -> Threshold old and new conf
     threshold5 = binoinv(threshold,length(pretest.Correct(tempIdx1)),0.5)/length(pretest.Correct(tempIdx1));
+    threshold5 = 0.50;
+    
     DataStructure(sbj,10) = OldAcc > threshold5;
     
     threshold6 = binoinv(threshold,length(pretest.Correct(tempIdx2)),0.5)/length(pretest.Correct(tempIdx2));
+    threshold6 = 0.50;
+    
     DataStructure(sbj,11) = NewAcc > threshold6;
     
     %% 12 & 13 -> PostTest New / Old Configurations
@@ -76,10 +85,10 @@ for sbj = 1:TotSub
     DataStructure(sbj,48) = nanmean(pretest.RT(tempIdx2)); % RT postTest new
     
     %% 14 & 15 -> Threshold old and new conf
-    threshold5 = binoinv(threshold,length(posttest.Correct(tempIdx1)),0.5)/length(posttest.Correct(tempIdx1));
+    %threshold5 = binoinv(threshold,length(posttest.Correct(tempIdx1)),0.5)/length(posttest.Correct(tempIdx1));
     DataStructure(sbj,14) = OldAcc > threshold5;
     
-    threshold6 = binoinv(threshold,length(posttest.Correct(tempIdx2)),0.5)/length(posttest.Correct(tempIdx2));
+    %threshold6 = binoinv(threshold,length(posttest.Correct(tempIdx2)),0.5)/length(posttest.Correct(tempIdx2));
     DataStructure(sbj,15) = NewAcc > threshold6;
     
     %% 16/18 -> TruePositive / False Negative
@@ -252,22 +261,10 @@ DataStructure(:,[37,38,39,40, 41]) = dec_array;
 % 45-46 mean RT for old and new stimuli pretest
 % 47-48 mean RT for old and new stimuli posttest
 %% Select subject
-%sbjIdx = (sum(DataStructure(:,[6,14,15])') > 0  | (DataStructure(:,20) > 0.65)') & (DataStructure(:,37) == 0)';
-
-%sbjIdx = (sum(DataStructure(:,[2,4,6,10,11,14,15])') > 0  | (DataStructure(:,20) > 0.65)') & (DataStructure(:,37) == 0)';
-% 12 13 8 9
-sbjIdx = (sum(DataStructure(:,[4,6,10,11,14,15])') > 0 | (DataStructure(:,20) > 0.5571)') & (DataStructure(:,37) == 0 | (DataStructure(:,37) == 1 & (DataStructure(:,13)-DataStructure(:,9)>0) & (DataStructure(:,12)-DataStructure(:,8)>0)))';
+sbjIdx = (sum(DataStructure(:,[4,6,10,11,14,15])') > 0 | (DataStructure(:,20) > 0.5071)') & (DataStructure(:,37) == 0 | (DataStructure(:,37) == 1 & (DataStructure(:,13)-DataStructure(:,9)>0) & (DataStructure(:,12)-DataStructure(:,8)>0)))';
+sbjIdx = (sum(DataStructure(:,[4,6,10])') > 0 & (DataStructure(:,20) > 0.50 | isnan(DataStructure(:,20)))') & (DataStructure(:,37) == 0 | (DataStructure(:,37) == 1 & (DataStructure(:,13)-DataStructure(:,9)>0) & (DataStructure(:,12)-DataStructure(:,8)>0)))';
 
 sbjIdx([19,23, 40]) = 0;
-
-% SbjTable = DataStructure(sbjIdx, [2,4,6,10,11,14,15,20]);
-% 
-% [row, col] = find(isnan(SbjTable));
-% 
-% offtable = array2table(SbjTable(row,:), 'VariableNames', {'Training', 'Pretest', 'Posttest', 'OldPreTest', 'NewPreTest', 'OldPostTest', 'NewPostTest', '2-back'});
-% 
-% [row, col] = find(~isnan(SbjTable(:,8)));
-% NBtable = array2table(SbjTable(row,:), 'VariableNames', {'Training', 'Pretest', 'Posttest', 'OldPreTest', 'NewPreTest', 'OldPostTest', 'NewPostTest', '2-back'});
 
 %% GENERAL Plot accuracy training - pretest - posttest
 figure

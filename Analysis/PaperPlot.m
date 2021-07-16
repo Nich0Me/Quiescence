@@ -8,9 +8,9 @@ CE = [.03 .3 .7;
     .8,.15,.15];
 
 C2 = [.70 .02 .43;
-    .2 .96 .2];
+    .05 .76 .99];
 CE2 = [.73 .23 .47;
-    .15,.8,.15];
+    .1,.8,.95];
 
 subplot(1,2,1)
 set(gca,'xticklabel',{[]})
@@ -25,7 +25,7 @@ set(gca,'FontSize',12)
 subplot(1,2,2)
 set(gca,'xticklabel',{[]})
 ax = superbar([mean([imprNBG; imprQG]), mean([imprNBM; imprQM])],'BarFaceColor', C2, 'E', [std([imprNBG; imprQG])./sqrt(length([imprNBG; imprQG])), std([imprNBM; imprQM])./sqrt(length([imprNBM; imprQM]))], 'ErrorbarColor', CE2);
-legend(ax,{'Generalization','Memorization'})
+legend(ax,{'New','Old'})
 ylim([-0.03 0.05])
 ylabel('Improvement')
 grid on
@@ -76,6 +76,7 @@ xlabel('Training', 'FontSize', 15)
 ylabel('Improvement', 'FontSize', 15)
 set(gca, 'FontSize', 15, 'YMinorTick','on','XMinorTick','on')
 legend([s1(1) s2(1)],'Offline','Active')
+grid on
 title('Generalization')
 
 
@@ -99,6 +100,7 @@ xlabel('Training', 'FontSize', 15)
 ylabel('Improvement', 'FontSize', 15)
 set(gca, 'FontSize', 15, 'YMinorTick','on','XMinorTick','on')
 legend([s1(1) s2(1)],'Offline','Active')
+grid on
 title('Memorization')
 
 

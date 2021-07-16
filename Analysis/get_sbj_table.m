@@ -1,5 +1,5 @@
 function dec_array = get_sbj_table()
-tabletemp = readtable('QuiescencePavloviaParticipants.xlsx');
+tabletemp = readtable('./../QuiescencePavloviaParticipants.xlsx');
 
 dec_array = table2array(tabletemp(1:100, 7));
 Break_Length = table2array(tabletemp(1:100, 10));
